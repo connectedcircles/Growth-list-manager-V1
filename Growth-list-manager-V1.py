@@ -8,7 +8,7 @@ import os
 
 ### Parse credentials stored in Streamlit Share secret
 # Load JSON credentials from a Streamlit Share secret
-google_credentials = os.getenv('google_credentials_text')
+google_credentials_text = os.getenv('google_credentials_text')
 
 # Convert to a dictionary
 google_credentials = json.loads(google_credentials_text)
