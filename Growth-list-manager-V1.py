@@ -1,18 +1,22 @@
 ### Import libraries
 import streamlit as st
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 import json
 import os
 
 
 ### Parse credentials stored in Streamlit Share secret
 # Load JSON credentials from a Streamlit Share secret
-google_credentials = os.getenv('google_credentials')
+google_credentials = os.getenv('google_credentials_text')
+
+# Convert to a dictionary
+google_credentials = json.loads(google_credentials_text)
+
 
 
 # Create ServiceAccountCredentials object
-creds = ServiceAccountCredentials.from_json_keyfile_dict(google_credentials)
+creds = service_account.Credentials.from_service_account_info(google_credentials)
 
 # Authenticate
 client = gspread.authorize(creds)
