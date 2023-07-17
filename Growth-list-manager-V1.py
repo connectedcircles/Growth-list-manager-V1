@@ -7,7 +7,7 @@ import json
 
 ### Parse credentials stored in Streamlit Share secret
 # Load JSON credentials as a dictionary
-credentials_dict = json.loads(google_credentials)
+credentials_dict = json.loads(st.secrets["google_credentials"])
 
 # Create ServiceAccountCredentials object
 creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict)
