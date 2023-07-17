@@ -10,11 +10,9 @@ import os
 # Load JSON credentials from a Streamlit Share secret
 google_credentials = os.getenv('google_credentials')
 
-# Turn JSON credentials as a dictionary
-credentials_dict = json.loads(google_credentials)
 
 # Create ServiceAccountCredentials object
-creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(google_credentials)
 
 # Authenticate
 client = gspread.authorize(creds)
