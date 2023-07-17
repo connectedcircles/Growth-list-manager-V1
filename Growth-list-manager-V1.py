@@ -14,3 +14,11 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict)
 
 # Authenticate
 client = gspread.authorize(creds)
+
+
+### Load the table of client login credentials
+sheet = client.open('Growth list manager login credentials').sheet1
+
+
+
+
