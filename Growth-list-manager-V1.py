@@ -14,7 +14,7 @@ google_credentials_text = os.getenv('google_credentials_text')
 
 ### Define the app
 def main():
-    st.title(print(google_credentials_text))
+    st.text(print(google_credentials_text))
 
 
 
