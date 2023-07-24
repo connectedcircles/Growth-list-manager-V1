@@ -19,7 +19,7 @@ google_credentials = json.loads(google_credentials_text)
 
 ### Define the app
 def main():
-    st.write(st.secrets["google_credentials_text"])
+    st.write(google_credentials["private_key"])
 
 
 
