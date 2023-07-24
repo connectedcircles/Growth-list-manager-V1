@@ -11,7 +11,7 @@ import os
 google_credentials_text = st.secrets["google_credentials_text"]
 
 # Convert to a dictionary
-google_credentials = json.loads(google_credentials_text)
+google_credentials = json.loads(st.secrets["google_credentials_text"])
 
 
 
