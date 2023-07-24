@@ -14,7 +14,7 @@ google_credentials_text = st.secrets["google_credentials_text"]
 
 ### Define the app
 def main():
-    st.text(print(google_credentials_text))
+    st.write("DB username:", st.secrets["google_credentials_text"])
 
 
 
