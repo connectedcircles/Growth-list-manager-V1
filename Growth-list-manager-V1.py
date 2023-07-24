@@ -13,6 +13,9 @@ google_credentials_text = st.secrets["google_credentials_text"]
 # Convert to a dictionary
 google_credentials = json.loads(google_credentials_text)
 
+# Create ServiceAccountCredentials object
+creds = service_account.Credentials.from_service_account_info(google_credentials)
+
 
 
 
