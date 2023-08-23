@@ -81,7 +81,7 @@ def main():
     files = files.dropna(subset=['names'])
 
     # Authenticate with Google Sheets API
-    gc = pygsheets.authorize(service_file='C:/Users/HP/Downloads/credentials.json')
+    gc = pygsheets.authorize(service_account_info=json_creds)
 
 
     # Calculate lengths and add the "length" column
