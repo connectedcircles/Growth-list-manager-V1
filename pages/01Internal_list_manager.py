@@ -8,6 +8,7 @@ import json
 ### Google Drive API authentication ########################################################################
 # Authenticate Google Drive API
 # Authenticate Google Sheets API
+raw_creds = st.secrets["raw_creds"]
 json_creds = json.loads(raw_creds)
 
 creds = service_account.Credentials.from_service_account_info(
