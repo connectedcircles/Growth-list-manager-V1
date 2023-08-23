@@ -1,2 +1,5 @@
 google-auth
 gspread
+google.oauth2
+getfilelistpy
+pygsheets
