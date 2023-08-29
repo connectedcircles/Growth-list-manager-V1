@@ -53,6 +53,11 @@ def main():
             st.success('Login Successful!')
             # Display clickable URLs to files in the folder
             files = get_files_in_folder(folder_url)
+
+                # detect which files are DONE and remove them
+            files['done'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() else 'no')
+            files = files.drop(files[files['done'] == "yes"].index)
+            
             if not files.empty:
                 st.markdown("### Available lists:")
                 for _, file in files.iterrows():
