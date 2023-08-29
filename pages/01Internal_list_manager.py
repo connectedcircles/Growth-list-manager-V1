@@ -30,7 +30,11 @@ def get_files_in_nested_folders(folder_url):
 
 # Streamlit app
 def main():
-    st.title("Google Drive Files Viewer")
+    st.title("Growth List Manager - Internal")
+    
+    # Adding tickbox selection menu for filtering (approved/pending/both)
+    filter_option = st.radio("Select Approval Status", ["Approved", "Pending approval", "All"], index=2)
+
     
     folder_url = 'https://drive.google.com/drive/folders/13pKJYkrbDgEqva5eHJx0Nta66gLZwzz7'  # Enter your default folder URL here
     res = get_files_in_nested_folders(folder_url)
@@ -78,29 +82,76 @@ def main():
     # merge them to the records
     files = files.merge(folder_tree_names, on='folderTree', how='left')
 
-    files = files.dropna(subset=['names'])
+    # drop files wich are not nested in a folder with the name of a client
+    files = files.dropna(subset = ['names'])
+    
+    # detect which files are DONE and remove them
+    files['done'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() else 'no')
+    
+    files = files.drop(files[files['done'] == "yes"].index)
+
+### Count the number of rows in the sheets #############################################################
 
     # Authenticate with Google Sheets API
     gc = pygsheets.authorize(custom_credentials=creds)
 
 
-    # Calculate lengths and add the "length" column
-    lengths = []
-    for idx, row in files.iterrows():
-        sheet_id = row['webViewLink'].split('/')[-2]
+    total_lengths = []
+    depleted_lengths = []
+    
+    for url in files['webViewLink']:
+        # Extract the Google Sheets ID from the URL
+        sheet_id = url.split('/')[-2]
+        
+        # Open the Google Sheet using its ID
         sheet = gc.open_by_key(sheet_id)
+        
+        # Select the first sheet
         worksheet = sheet[0]
-        column_values = worksheet.get_col(1)
-        non_empty_count = sum(1 for value in column_values if value)
-        lengths.append(non_empty_count)
-    files['length'] = lengths
+        
+        # Get all values in the sheet
+        all_values = worksheet.get_all_values()
+        
+        # Find the header row
+        header_row = all_values[0]
+        
+        # Find the index of the "Sent" column
+        sent_column_index = header_row.index("Sent") if "Sent" in header_row else None
+        
+        # Count non-empty cells in the first column
+        total_count = sum(1 for row in all_values if row[0])
+        
+        # Count rows where the "Sent" column has the value "Depleted"
+        depleted_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Depleted")
+        
+        total_lengths.append(total_count)
+        depleted_lengths.append(depleted_count)
+### Now we make operations on the dataframe
+# Add the lengths and depleted lengths column in the original DataFrame
+    files['length'] = total_lengths
+    files['depleted'] = depleted_lengths
+    # calculate the number of available rows
+    files['available'] = files['length'] - files['depleted']
+    # label growth lists based on whether they include the strings approved or done
+    files['approved'] = files['name'].apply(lambda x: 'yes' if 'approved' in x.lower() else 'no')
+    
+    # Filter the files based on whether the tickbox menu selection is approved/pending/both
+    # Filter files based on the selected option
+    if filter_option == "Approved":
+        filtered_files = files[files['approved'] == 'yes']
+    elif filter_option == "Pending approval":
+        filtered_files = files[files['approved'] == 'no']
+    else:
+        filtered_files = files
+    
 
     # Display files grouped by names with hyperlinks and length
-    grouped = files.groupby('names')
+    grouped = filtered_files.groupby('names')
     for name, group in grouped:
         st.subheader(name)
         for idx, row in group.iterrows():
-            st.markdown(f"**[{row['name']}]({row['webViewLink']})** - Length: {row['length']}")
+            st.markdown(f"**[{row['name']}]({row['webViewLink']})** - Length: {row['length']} - Available: {row['available']}")
+
 
 if __name__ == "__main__":
     main()
