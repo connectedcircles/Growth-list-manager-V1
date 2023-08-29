@@ -31,6 +31,10 @@ def get_files_in_nested_folders(folder_url):
 # Streamlit app
 def main():
     st.title("Growth List Manager - Internal")
+    st.write("""This app allows you to view growth lists and filter them based on approval status. Please follow the correct procedure when 
+    creating growth lists - 1.Use the correct template. 2. Indicate which names have been invited alreay using the "Sent" column in the template. 3.
+    Store the folder in the appropriate folder in the "Growth list manager" drive. 3. Use the prefix "Approved" and "Done" in the filename to indicate 
+    the approval/competion status.""")
     
     # Adding tickbox selection menu for filtering (approved/pending/both)
     filter_option = st.radio("Select Approval Status", ["Approved", "Pending approval", "All"], index=2)
