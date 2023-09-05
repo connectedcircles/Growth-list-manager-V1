@@ -84,7 +84,7 @@ def main():
     folder_tree_names = folder_tree_names.rename(columns={"folders": "folderTree"})
 
     # merge them to the records
-    files = files.merge(folder_tree_names, on='folderTree', how='left')
+    files = files.merge(folder_tree_names, on='folderTree', how='outer')
 
     # drop files wich are not nested in a folder with the name of a client
     files = files.dropna(subset = ['names'])
