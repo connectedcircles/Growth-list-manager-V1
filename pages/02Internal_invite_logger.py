@@ -8,25 +8,25 @@ import json
 
 
 
-### Google Drive API authentication (Streamlit share version) ###############################################
-# Authenticate Google Drive API
-# Authenticate Google Sheets API
-raw_creds = st.secrets["raw_creds"]
-json_creds = json.loads(raw_creds)
-
-creds = service_account.Credentials.from_service_account_info(
-    json_creds,
-    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-)
-############################################################################################################
-
-#### Google Drive API authentication (Offline, local version)#################################################
+#### Google Drive API authentication (Streamlit share version) ###############################################
 ## Authenticate Google Drive API
 ## Authenticate Google Sheets API
-#creds = service_account.Credentials.from_service_account_file(
-#    'C:/Users/HP/Downloads/credentials.json',
+#raw_creds = st.secrets["raw_creds"]
+#json_creds = json.loads(raw_creds)
+#
+#creds = service_account.Credentials.from_service_account_info(
+#    json_creds,
 #    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 #)
+############################################################################################################
+
+### Google Drive API authentication (Offline, local version)#################################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+creds = service_account.Credentials.from_service_account_file(
+    'C:/Users/HP/Downloads/credentials.json',
+    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+)
 #############################################################################################################
 
 
@@ -43,7 +43,7 @@ def append_to_sheet(df):
         worksheet = spreadsheet.sheet1
         
         # Calculate the starting row for appending data
-        start_row = len(worksheet.get_all_values()) + 1
+        start_row = sum(1 for row in worksheet.get_all_values() if row[0]) + 1
         
         # Append the data to the worksheet, starting from the next empty row
         worksheet.append_table(values=df.values.tolist(), start=f'A{start_row}', end=None, dimension='ROWS', overwrite=False)
@@ -93,3 +93,4 @@ def app():
 
 if __name__ == "__main__":
     app()
+
