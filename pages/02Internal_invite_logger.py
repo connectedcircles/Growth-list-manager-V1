@@ -8,25 +8,25 @@ import json
 
 
 
-### Google Drive API authentication (Streamlit share version) ###############################################
-# Authenticate Google Drive API
-# Authenticate Google Sheets API
-raw_creds = st.secrets["raw_creds"]
-json_creds = json.loads(raw_creds)
-
-creds = service_account.Credentials.from_service_account_info(
-    json_creds,
-    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-)
-############################################################################################################
-
-#### Google Drive API authentication (Offline, local version)#################################################
+#### Google Drive API authentication (Streamlit share version) ###############################################
 ## Authenticate Google Drive API
 ## Authenticate Google Sheets API
-#creds = service_account.Credentials.from_service_account_file(
-#    'C:/Users/HP/Downloads/credentials.json',
+#raw_creds = st.secrets["raw_creds"]
+#json_creds = json.loads(raw_creds)
+#
+#creds = service_account.Credentials.from_service_account_info(
+#    json_creds,
 #    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 #)
+############################################################################################################
+
+### Google Drive API authentication (Offline, local version)#################################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+creds = service_account.Credentials.from_service_account_file(
+    'C:/Users/HP/Downloads/credentials.json',
+    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+)
 #############################################################################################################
 
 
@@ -42,8 +42,11 @@ def append_to_sheet(df):
         # Select the worksheet by title
         worksheet = spreadsheet.sheet1
         
-        # Append the data to the worksheet
-        worksheet.append_table(values=df.values.tolist(), start='A1', end=None, dimension='ROWS', overwrite=True)
+        # Calculate the starting row for appending data
+        start_row = len(worksheet.get_all_values()) + 1
+        
+        # Append the data to the worksheet, starting from the next empty row
+        worksheet.append_table(values=df.values.tolist(), start=f'A{start_row}', end=None, dimension='ROWS', overwrite=False)
         
         st.success("Data appended successfully!")
     except Exception as e:
