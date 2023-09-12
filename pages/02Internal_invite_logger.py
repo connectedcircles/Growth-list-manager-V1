@@ -53,7 +53,7 @@ def app():
     # Set title and subtitle, additional text
     st.title("Growth Invite Logger V1")
     st.subheader("Property of Connected Circles")
-    st.write("""This app allows you to """)
+    st.write("""Log invites with this app. Please mind your spelling.""")
     
     # Set client name, invite date and category
     ClientName = st.text_input("Enter client name")
