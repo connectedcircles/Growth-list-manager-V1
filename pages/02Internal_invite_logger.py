@@ -5,11 +5,31 @@ import datetime
 from google.oauth2 import service_account
 import pygsheets
 
-# Google Drive API authentication (Offline, local version)
-creds = service_account.Credentials.from_service_account_file(
-    'C:/Users/HP/Downloads/credentials.json',
-    scopes=['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+
+
+### Google Drive API authentication (Streamlit share version) ###############################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+raw_creds = st.secrets["raw_creds"]
+json_creds = json.loads(raw_creds)
+
+creds = service_account.Credentials.from_service_account_info(
+    json_creds,
+    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 )
+############################################################################################################
+
+#### Google Drive API authentication (Offline, local version)#################################################
+## Authenticate Google Drive API
+## Authenticate Google Sheets API
+#creds = service_account.Credentials.from_service_account_file(
+#    'C:/Users/HP/Downloads/credentials.json',
+#    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+#)
+#############################################################################################################
+
+
+#use it to authorize pygsheets
 gc = pygsheets.authorize(custom_credentials=creds)
 
 # Define function to append data to Google Sheet
