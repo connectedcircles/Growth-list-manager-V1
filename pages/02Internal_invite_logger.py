@@ -31,10 +31,7 @@ creds = service_account.Credentials.from_service_account_file(
 
 
 ### Slack authorization (Offline, local version) ####################################################################
-# set Slack access token
-slack_token = 'xoxb-4331492459526-5663971243091-9L5s6j2vewpVg4DFwL7zOoXK'
-# set slack channel
-target_channel_id = "C05SAGFRL2F"
+
 ############################################################################################
 
 ### Slack authorization (Streamlit share version) ####################################################################
