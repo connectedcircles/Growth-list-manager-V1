@@ -35,9 +35,9 @@ creds = service_account.Credentials.from_service_account_info(
 ############################################################################################
 
 ### Slack authorization (Streamlit share version) ####################################################################
- set Slack access token
+# set Slack access token
 slack_token = st.secrets["slack_token"]
- set slack channel
+# set slack channel
 target_channel_id = st.secrets["target_channel_id"]
 ############################################################################################
 
