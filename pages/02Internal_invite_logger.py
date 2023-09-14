@@ -7,25 +7,25 @@ import pygsheets
 import json
 from slack_sdk import WebClient
 
-#### Google Drive API authentication (Streamlit share version) ###############################################
-## Authenticate Google Drive API
-## Authenticate Google Sheets API
-#raw_creds = st.secrets["raw_creds"]
-#json_creds = json.loads(raw_creds)
-#
-#creds = service_account.Credentials.from_service_account_info(
-#    json_creds,
-#    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-#)
+### Google Drive API authentication (Streamlit share version) ###############################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+raw_creds = st.secrets["raw_creds"]
+json_creds = json.loads(raw_creds)
+
+creds = service_account.Credentials.from_service_account_info(
+    json_creds,
+    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+)
 ############################################################################################################
 
 ### Google Drive API authentication (Offline, local version) #################################################
 # Authenticate Google Drive API
 # Authenticate Google Sheets API
-creds = service_account.Credentials.from_service_account_file(
-    'C:/Users/HP/Downloads/credentials.json',
-    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-)
+#creds = service_account.Credentials.from_service_account_file(
+#    'C:/Users/HP/Downloads/credentials.json',
+#    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+#)
 ############################################################################################################
 
 
