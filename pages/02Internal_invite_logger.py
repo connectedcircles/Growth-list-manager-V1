@@ -132,7 +132,7 @@ def app():
         # Button to append data to Google Sheet and send Slack message
         if st.button("Append data to Google Sheet and Send Slack Message"):
             appended = append_to_sheet(df.dropna(how="all", axis=1), ClientName, Category, DateInvited_str, growth_list_url)
-            message = f"{ClientName}, {len(df) - 1} profiles, \"{Category}\", {DateInvited_str}, {growth_list_url}"
+            message = f"{ClientName}, {len(df)} profiles, \"{Category}\", {DateInvited_str}, {growth_list_url}"
             send_slack_message(message)
 
 
