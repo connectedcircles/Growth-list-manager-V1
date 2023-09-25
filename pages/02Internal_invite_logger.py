@@ -55,7 +55,7 @@ gc = pygsheets.authorize(custom_credentials=creds)
 def append_to_sheet(df, ClientName, Category, DateInvited_str, growth_list_url):
     try:
         # Open the Google Sheet by title
-        spreadsheet = gc.open_by_key('1UsI_uXcDeVQ61saUwok9wBygLbaEdR15zMCu52D5WU8')
+        spreadsheet = gc.open_by_key('1QWhVtOPoOoYVdxoUtM5RKAhwJKVW-6-q6T5ACZJVkdU')
         
         # Select the worksheet by title
         worksheet = spreadsheet.sheet1
