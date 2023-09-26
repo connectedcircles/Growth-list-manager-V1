@@ -123,7 +123,7 @@ def main():
         sent_column_index = header_row.index("Sent") if "Sent" in header_row else None
         
         # Count non-empty cells in the first column
-        total_count = sum(1 for row in all_values if row[0])
+        total_count = sum(1 for row in all_values if row[0])-1
         
         # Count rows where the "Sent" column has the value "Depleted"
         depleted_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Depleted")
