@@ -104,32 +104,56 @@ def main():
     depleted_lengths = []
     
     for url in files['webViewLink']:
-        # Extract the Google Sheets ID from the URL
-        sheet_id = url.split('/')[-2]
-        
-        # Open the Google Sheet using its ID
-        sheet = gc.open_by_key(sheet_id)
-        
-        # Select the first sheet
-        worksheet = sheet[0]
-        
-        # Get all values in the sheet
-        all_values = worksheet.get_all_values()
-        
-        # Find the header row
-        header_row = all_values[0]
-        
-        # Find the index of the "Sent" column
-        sent_column_index = header_row.index("Sent") if "Sent" in header_row else None
-        
-        # Count non-empty cells in the first column
-        total_count = sum(1 for row in all_values if row[0])-1
-        
-        # Count rows where the "Sent" column has the value "Depleted"
-        depleted_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Depleted")
-        
-        total_lengths.append(total_count)
-        depleted_lengths.append(depleted_count)
+        # Check if the 'url' is not NaN
+        if pd.notna(url):
+            try:
+                # Print the URL for debugging
+                print(f"Processing URL: {url}")
+                
+                # Extract the Google Sheets ID from the URL
+                sheet_id = url.split('/')[-2]
+                
+                # Print the extracted Sheet ID for debugging
+                print(f"Extracted Sheet ID: {sheet_id}")
+    
+                # Open the Google Sheet using its ID
+                sheet = gc.open_by_key(sheet_id)
+    
+                # Select the first sheet
+                worksheet = sheet[0]
+    
+                # Get all values in the sheet
+                all_values = worksheet.get_all_values()
+    
+                # Find the header row
+                header_row = all_values[0]
+    
+                # Find the index of the "Sent" column
+                if "Sent" not in header_row:
+                    raise ValueError("The 'Sent' column is missing!")
+                
+                sent_column_index = header_row.index("Sent")
+    
+                # Count non-empty cells in the first column
+                total_count = sum(1 for row in all_values if row[0])
+    
+                # Count rows where the "Sent" column has the value "Depleted"
+                depleted_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Depleted")
+    
+                total_lengths.append(total_count)
+                depleted_lengths.append(depleted_count)
+                
+            except Exception as e:
+                print(f"Failed processing {url} due to: {e}")
+                # Append 0 for this URL since it failed
+                total_lengths.append(0)
+                depleted_lengths.append(0)
+    
+        else:
+            # Handle NaN case here
+            total_lengths.append(0)
+            depleted_lengths.append(0)
+            
 ### Now we make operations on the dataframe
 # Add the lengths and depleted lengths column in the original DataFrame
     files['length'] = total_lengths
