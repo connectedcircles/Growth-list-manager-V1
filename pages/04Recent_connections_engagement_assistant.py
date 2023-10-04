@@ -61,7 +61,7 @@ def make_clickable_link(val):
 
 def main():
     st.title("Recent Connections Engagement Assistant")
-    st.write("""Engage with most recent connections by cliking the Posts' URL. Connections
+    st.write("""Engage with most recent connections that were invited by CC by clicking the Posts' URL. Connections
              are sorted from most recent to least recent.""")
 
     # Obtain data
