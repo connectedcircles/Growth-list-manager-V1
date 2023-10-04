@@ -57,13 +57,7 @@ def get_invited_profiles():
 
 def make_clickable_link(val):
     """Return a clickable URL (Streamlit doesn't support this for DataFrame directly yet)"""
-    try:
-        return f'<a target="_blank" href="{val}">🔗</a>'
-    except Exception as e:
-        print(f"Error creating clickable link for value '{val}': {e}")
-        # Handle the error, e.g., by returning a sanitized version, an error message, or the original value
-        sanitized_val = ''.join(ch for ch in val if ch.isprintable())  # Remove non-printable characters
-        return f'<a target="_blank" href="{sanitized_val}">🔗</a>'
+    return f'<a target="_blank" href="{val}">🔗</a>'
 
 
 def main():
