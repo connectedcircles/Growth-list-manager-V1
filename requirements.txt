@@ -3,3 +3,4 @@ google.auth
 getfilelistpy
 pygsheets
 slack_sdk
+pyodbc
