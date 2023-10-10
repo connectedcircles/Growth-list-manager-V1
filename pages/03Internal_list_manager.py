@@ -69,7 +69,7 @@ def main():
     for record in file_records:
         folder_tree = record['folderTree']
         if len(folder_tree) > 1:
-            record['folderTree'] = folder_tree[1]
+            record['folderTree'] = folder_tree[-1]
         else:
             record['folderTree'] = None
 
