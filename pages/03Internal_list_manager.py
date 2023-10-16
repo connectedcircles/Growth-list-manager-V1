@@ -4,6 +4,7 @@ from google.oauth2 import service_account
 from getfilelistpy import getfilelist
 import pygsheets
 import json
+import numpy as np
 
 ### Google Drive API authentication ########################################################################
 # Authenticate Google Drive API
@@ -36,8 +37,6 @@ def main():
     Store the folder in the appropriate folder in the "Growth list manager" drive. 3. Use the prefix "Approved" and "Done" in the filename to indicate 
     the approval/competion status.""")
     
-    # Adding tickbox selection menu for filtering (approved/pending/both)
-    filter_option = st.radio("Select Approval Status", ["Approved", "Pending approval", "All"], index=2)
 
     
     folder_url = 'https://drive.google.com/drive/folders/13pKJYkrbDgEqva5eHJx0Nta66gLZwzz7'  # Enter your default folder URL here
@@ -68,7 +67,7 @@ def main():
     # Preserve only the second foldertree value (the name of the client folder id)
     for record in file_records:
         folder_tree = record['folderTree']
-        if len(folder_tree) > 1:
+        if len(folder_tree) > 0:
             record['folderTree'] = folder_tree[-1]
         else:
             record['folderTree'] = None
@@ -93,6 +92,8 @@ def main():
     files['done'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() else 'no')
     
     files = files.drop(files[files['done'] == "yes"].index)
+
+    files = files.merge(folder_tree_names['names'], on='names', how='right')
 
 ### Count the number of rows in the sheets #############################################################
 
@@ -161,20 +162,15 @@ def main():
     # calculate the number of available rows
     files['available'] = files['length'] - files['depleted']
     # label growth lists based on whether they include the strings approved or done
-    files['approved'] = files['name'].apply(lambda x: 'yes' if 'approved' in x.lower() else 'no')
-    
-    # Filter the files based on whether the tickbox menu selection is approved/pending/both
-    # Filter files based on the selected option
-    if filter_option == "Approved":
-        filtered_files = files[files['approved'] == 'yes']
-    elif filter_option == "Pending approval":
-        filtered_files = files[files['approved'] == 'no']
-    else:
-        filtered_files = files
-    
+    files['approved'] = files['name'].apply(lambda x: 
+                                            'yes' if 'approved' in str(x).lower() 
+                                            else ('no' if isinstance(x, str) 
+                                                  else np.nan))
+
 
     # Display files grouped by names with hyperlinks and length
-    grouped = filtered_files.groupby('names')
+    grouped = files.groupby('names')
+
     for name, group in grouped:
         st.subheader(name)
         for idx, row in group.iterrows():
