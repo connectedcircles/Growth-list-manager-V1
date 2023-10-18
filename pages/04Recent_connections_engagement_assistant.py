@@ -56,8 +56,8 @@ def get_invited_profiles():
     return df
 
 def make_clickable_link(val):
-    """Return a clickable URL (Streamlit doesn't support this for DataFrame directly yet)"""
-    return f'<a target="_blank" href="{val}">🔗</a>'
+    """Return a clickable URL with the text 'URL'"""
+    return f'<a target="_blank" href="{val}">URL</a>'
 
 
 def main():
