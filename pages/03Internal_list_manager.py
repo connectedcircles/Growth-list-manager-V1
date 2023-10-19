@@ -88,10 +88,10 @@ def main():
     # drop files wich are not nested in a folder with the name of a client
     files = files.dropna(subset = ['names'])
     
-    # detect which files are DONE and remove them
-    files['done'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() else 'no')
+    # detect which files are DONE or declined and remove them
+    files['done_or_declined'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() or 'declined' in x.lower() else 'no')
     
-    files = files.drop(files[files['done'] == "yes"].index)
+    files = files.drop(files[files['done_or_declined'] == "yes"].index)
 
     files = files.merge(folder_tree_names['names'], on='names', how='right')
 
