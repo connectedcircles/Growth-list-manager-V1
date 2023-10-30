@@ -29,6 +29,46 @@ def get_files_in_nested_folders(folder_url):
     return res
 #######################################################################################################
 
+import streamlit as st
+import pandas as pd
+from google.oauth2 import service_account
+from getfilelistpy import getfilelist
+import pygsheets
+import json
+import numpy as np
+
+### Google Drive API authentication (LOCAL) ########################################################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+creds = service_account.Credentials.from_service_account_file(
+    'C:/Users/HP/Downloads/credentials.json',
+    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+)
+#############################################################################################################
+
+### Google Drive API authentication (STREAMLIT SHARE)########################################################################
+# Authenticate Google Drive API
+# Authenticate Google Sheets API
+#raw_creds = st.secrets["raw_creds"]
+#json_creds = json.loads(raw_creds)
+
+#creds = service_account.Credentials.from_service_account_info(
+#    json_creds,
+#    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+#)
+#############################################################################################################
+
+##### Define function to retrieve all info about the files in a folder and the folders within it #####
+def get_files_in_nested_folders(folder_url):
+    resource = {
+        "service_account":creds,
+        "id": folder_url.split('/')[-1],
+        "fields": "files(name,id,webViewLink)",
+    }
+    res = getfilelist.GetFileList(resource)
+    return res
+#######################################################################################################
+
 # Streamlit app
 def main():
     st.title("Growth List Manager - Internal")
@@ -90,10 +130,18 @@ def main():
     
     # detect which files are DONE or declined and remove them
     files['done_or_declined'] = files['name'].apply(lambda x: 'yes' if 'done' in x.lower() or 'declined' in x.lower() else 'no')
-    
     files = files.drop(files[files['done_or_declined'] == "yes"].index)
-
+    
+    # merge with the names of folders
     files = files.merge(folder_tree_names['names'], on='names', how='right')
+    
+    # detect which folders are personal profiles (using the string "profile" and remove other folders (like umbrella folders etc.)
+    # then remove the string "profile" from the folder name
+    files['profile_folder'] = files['names'].apply(lambda x: 'yes' if 'profile' in x.lower() else 'no')
+    files = files.drop(files[files['profile_folder'] == "no"].index)
+    files['names'] = files['names'].str.replace('profile', '', case=False)
+
+    
 
 ### Count the number of rows in the sheets #############################################################
 
