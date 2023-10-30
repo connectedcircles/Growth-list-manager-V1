@@ -74,15 +74,23 @@ def main():
     # Get unique clients for the dropdown menu
     unique_clients = df_connections['Client'].unique()
 
-    # Dropdown menu
+    # Dropdown menu for Client
     Client_Name = st.selectbox("Select Client", unique_clients)
+
+    # Dropdown menu for Category
+    unique_categories = ['All'] + list(df_invited['Category'].unique())
+    selected_category = st.selectbox("Select Category", unique_categories)
 
     df_invited_client_specific = df_invited[df_invited['Client Name'] == Client_Name]
     df_connections_client_specific = df_connections[df_connections['Client'] == Client_Name]
-    
-    df_accepted = pd.merge(df_invited_client_specific, df_connections_client_specific[['Name','ProfileDate']], on='Name', how='inner')
+
+    df_accepted = pd.merge(df_invited_client_specific, df_connections_client_specific[['Name', 'ProfileDate']], on='Name', how='inner')
     df_accepted_display = df_accepted[["Name", "Title", "Profile URL", "Posts_URL", "Followers", "Category", "Date collected", "ProfileDate"]]
     df_accepted_display.rename(columns={'Posts_URL': 'Posts URL', "Date collected": 'Invited on', 'ProfileDate': 'Connected on (approximate)'}, inplace=True)
+
+    if selected_category != 'All':
+        df_accepted_display = df_accepted_display[df_accepted_display['Category'] == selected_category]
+
     df_accepted_display = df_accepted_display.sort_values(by='Connected on (approximate)', ascending=False)
 
     # Convert URLs to clickable icons
