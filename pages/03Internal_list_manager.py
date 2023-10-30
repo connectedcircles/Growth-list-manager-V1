@@ -29,46 +29,6 @@ def get_files_in_nested_folders(folder_url):
     return res
 #######################################################################################################
 
-import streamlit as st
-import pandas as pd
-from google.oauth2 import service_account
-from getfilelistpy import getfilelist
-import pygsheets
-import json
-import numpy as np
-
-### Google Drive API authentication (LOCAL) ########################################################################
-# Authenticate Google Drive API
-# Authenticate Google Sheets API
-creds = service_account.Credentials.from_service_account_file(
-    'C:/Users/HP/Downloads/credentials.json',
-    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-)
-#############################################################################################################
-
-### Google Drive API authentication (STREAMLIT SHARE)########################################################################
-# Authenticate Google Drive API
-# Authenticate Google Sheets API
-#raw_creds = st.secrets["raw_creds"]
-#json_creds = json.loads(raw_creds)
-
-#creds = service_account.Credentials.from_service_account_info(
-#    json_creds,
-#    scopes=['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-#)
-#############################################################################################################
-
-##### Define function to retrieve all info about the files in a folder and the folders within it #####
-def get_files_in_nested_folders(folder_url):
-    resource = {
-        "service_account":creds,
-        "id": folder_url.split('/')[-1],
-        "fields": "files(name,id,webViewLink)",
-    }
-    res = getfilelist.GetFileList(resource)
-    return res
-#######################################################################################################
-
 # Streamlit app
 def main():
     st.title("Growth List Manager - Internal")
