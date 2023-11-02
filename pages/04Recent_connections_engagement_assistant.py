@@ -98,8 +98,8 @@ def main():
     df_accepted_display['Profile URL'] = df_accepted_display['Profile URL'].apply(make_clickable_link)
     df_accepted_display['Posts URL'] = df_accepted_display['Posts URL'].apply(make_clickable_link)
 
-    # Display data with clickable links
-    st.write(df_accepted_display.to_html(escape=False), unsafe_allow_html=True)
+    # Display data with clickable links without the index
+    st.write(df_accepted_display.to_html(index=False, escape=False), unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
