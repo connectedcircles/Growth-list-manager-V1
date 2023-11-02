@@ -77,9 +77,9 @@ def main():
     # Dropdown menu for Client
     Client_Name = st.selectbox("Select Client", unique_clients)
 
-    # Dropdown menu for Category
-    unique_categories = ['All'] + list(df_invited['Category'].unique())
-    selected_category = st.selectbox("Select Category", unique_categories)
+    # Dropdown menu for Category with "All Categories" at the top
+    unique_categories = ["All Categories"] + list(df_invited['Category'].unique())
+    selected_categories = st.multiselect("Select Category", unique_categories, default=["All Categories"])
 
     df_invited_client_specific = df_invited[df_invited['Client Name'] == Client_Name]
     df_connections_client_specific = df_connections[df_connections['Client'] == Client_Name]
@@ -88,8 +88,9 @@ def main():
     df_accepted_display = df_accepted[["Name", "Title", "Profile URL", "Posts_URL", "Followers", "Category", "Date collected", "ProfileDate"]]
     df_accepted_display.rename(columns={'Posts_URL': 'Posts URL', "Date collected": 'Invited on', 'ProfileDate': 'Connected on (approximate)'}, inplace=True)
 
-    if selected_category != 'All':
-        df_accepted_display = df_accepted_display[df_accepted_display['Category'] == selected_category]
+    # If "All Categories" is not the only category selected, filter by selected categories
+    if "All Categories" not in selected_categories or len(selected_categories) > 1:
+        df_accepted_display = df_accepted_display[df_accepted_display['Category'].isin(selected_categories)]
 
     df_accepted_display = df_accepted_display.sort_values(by='Connected on (approximate)', ascending=False)
 
