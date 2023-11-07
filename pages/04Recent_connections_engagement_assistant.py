@@ -92,14 +92,22 @@ def main():
     if "All Categories" not in selected_categories or len(selected_categories) > 1:
         df_accepted_display = df_accepted_display[df_accepted_display['Category'].isin(selected_categories)]
 
+    # Option to display as dataframe using a toggle
+    display_as_dataframe = st.checkbox("Display as dataframe", value=False)
+
+    # Sort the dataframe
     df_accepted_display = df_accepted_display.sort_values(by='Connected on (approximate)', ascending=False)
 
-    # Convert URLs to clickable icons
-    df_accepted_display['Profile URL'] = df_accepted_display['Profile URL'].apply(make_clickable_link)
-    df_accepted_display['Posts URL'] = df_accepted_display['Posts URL'].apply(make_clickable_link)
+    if display_as_dataframe:
+        # Display as raw dataframe
+        st.dataframe(df_accepted_display)
+    else:
+        # Convert URLs to clickable icons
+        df_accepted_display['Profile URL'] = df_accepted_display['Profile URL'].apply(make_clickable_link)
+        df_accepted_display['Posts URL'] = df_accepted_display['Posts URL'].apply(make_clickable_link)
 
-    # Display data with clickable links without the index
-    st.write(df_accepted_display.to_html(index=False, escape=False), unsafe_allow_html=True)
+        # Display data with clickable links without the index
+        st.write(df_accepted_display.to_html(index=False, escape=False), unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
