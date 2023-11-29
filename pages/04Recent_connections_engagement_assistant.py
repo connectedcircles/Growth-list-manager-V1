@@ -85,8 +85,8 @@ def main():
     df_connections_client_specific = df_connections[df_connections['Client'] == Client_Name]
 
     df_accepted = pd.merge(df_invited_client_specific, df_connections_client_specific[['Name', 'ProfileDate']], on='Name', how='inner')
-    df_accepted_display = df_accepted[["Name", "Title", "Profile URL", "Posts_URL", "Followers", "Category", "Date collected", "ProfileDate"]]
-    df_accepted_display.rename(columns={'Posts_URL': 'Posts URL', "Date collected": 'Invited on', 'ProfileDate': 'Connected on (approximate)'}, inplace=True)
+    df_accepted_display = df_accepted[["Name", "Title", "Organization 1", "Profile URL", "Posts_URL", "Followers", "Category", "Date collected", "ProfileDate"]]
+    df_accepted_display.rename(columns={"Organization 1": "Organization", 'Posts_URL': 'Posts URL', "Date collected": 'Invited on', 'ProfileDate': 'Connected on (approximate)'}, inplace=True)
 
     # If "All Categories" is not the only category selected, filter by selected categories
     if "All Categories" not in selected_categories or len(selected_categories) > 1:
