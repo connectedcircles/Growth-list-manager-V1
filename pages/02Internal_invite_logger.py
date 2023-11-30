@@ -107,7 +107,7 @@ def get_invited_profiles():
 def app():
     st.title("Growth Invite Logger V1")
     st.subheader("Property of Connected Circles")
-    st.write("Log invites with this app. Please mind your spelling.")
+    st.write("Log invites with this app. Please mind your spelling. Data location: https://docs.google.com/spreadsheets/d/1QWhVtOPoOoYVdxoUtM5RKAhwJKVW-6-q6T5ACZJVkdU/edit#gid=1820302186. For emergency use, fill manually.")
 
     # Get invited profiles
     invited_profiles = get_invited_profiles()
