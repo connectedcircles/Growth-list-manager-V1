@@ -75,7 +75,6 @@ def app():
     st.title("Growth Invite Logger V1")
     st.subheader("Property of Connected Circles")
     st.write("""Log invites with this app. Please mind your spelling. Data location: https://docs.google.com/spreadsheets/d/1QWhVtOPoOoYVdxoUtM5RKAhwJKVW-6-q6T5ACZJVkdU/edit#gid=1820302186. For emergency use, fill mnaually""")
-    st.write("""Log invites with this app. Please mind your spelling. Data location: https://docs.google.com/spreadsheets/d/1QWhVtOPoOoYVdxoUtM5RKAhwJKVW-6-q6T5ACZJVkdU/edit#gid=1820302186. For emergency use, fill manually.""")
 
     # Set client name, invite date, category, and growth list URL
     ClientName = st.text_input("Enter client name")
