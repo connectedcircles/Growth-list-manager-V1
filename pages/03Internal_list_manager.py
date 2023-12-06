@@ -97,9 +97,9 @@ def main():
     
     # detect which folders are personal profiles (using the string "profile" and remove other folders (like umbrella folders etc.)
     # then remove the string "profile" from the folder name
-    files['profile_folder'] = files['names'].apply(lambda x: 'yes' if 'profile' in x.lower() else 'no')
+    files['profile_folder'] = files['names'].apply(lambda x: 'yes' if 'active' in x.lower() else 'no')
     files = files.drop(files[files['profile_folder'] == "no"].index)
-    files['names'] = files['names'].str.replace('profile', '', case=False)
+    files['names'] = files['names'].str.replace('active', '', case=False)
 
     
 
