@@ -63,7 +63,8 @@ def make_clickable_link(val):
 def main():
     st.title("Recent Connections Engagement Assistant")
     st.write("""Engage with most recent connections that were invited by CC by clicking the Posts' URL. Connections
-             are sorted from most recent to least recent.""")
+             are sorted from most recent to least recent. MAINTENANCE: In case of "pyodbc.ProgrammingError:" contact Data Team. 
+             Data Team: Manage App (lower right hand corner of the app) -> Copy the IP adress -> add firewall rule in Azure Portal""")
 
     # Obtain data
     df_connections = get_all_connections()
