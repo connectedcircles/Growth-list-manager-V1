@@ -64,7 +64,8 @@ def main():
     st.title("Recent Connections Engagement Assistant")
     st.write("""Engage with most recent connections that were invited by CC by clicking the Posts' URL. Connections
              are sorted from most recent to least recent. MAINTENANCE: In case of "pyodbc.ProgrammingError:" contact Data Team. 
-             Data Team: Manage App (lower right hand corner of the app) -> Copy the IP adress -> add firewall rule in Azure Portal""")
+             Data Team: Manage App (lower right hand corner of the app) -> Copy the IP adress -> add firewall rule in Azure Portal.
+             https://portal.azure.com/#@connectedcircles.net/resource/subscriptions/61171ae4-c392-4dca-9ad4-880921a42770/resourceGroups/circulus-api/providers/Microsoft.Sql/servers/circulus-data/networking""")
 
     # Obtain data
     df_connections = get_all_connections()
