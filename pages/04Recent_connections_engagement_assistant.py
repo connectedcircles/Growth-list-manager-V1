@@ -80,7 +80,7 @@ def main():
     Client_Name = st.selectbox("Select Client", unique_clients)
 
     # Dropdown menu for Category with "All Categories" at the top
-    unique_categories = ["All Categories"] + list(df_invited[df_invited['Client'] == Client_Name]['Category'].unique())
+    unique_categories = ["All Categories"] + list(df_invited[df_invited['Client Name'] == Client_Name]['Category'].unique())
     selected_categories = st.multiselect("Select Category", unique_categories, default=["All Categories"])
 
     df_invited_client_specific = df_invited[df_invited['Client Name'] == Client_Name]
