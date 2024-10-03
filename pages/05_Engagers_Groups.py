@@ -127,10 +127,8 @@ def main():
     #st.table(df)
     # Set the title and description of the Streamlit app
     st.title("Create and Monitor Activity of Specific Groups")
-    st.write("""Engage with selected groups from all connections by clicking the Posts' URL. You can create a new group by choosing a client, naming a group and selecting names from the client network. 
-             If you want to manually update the Excel file with groups (remove/add new names from existing groups), you can click on this link:
-                https://docs.google.com/spreadsheets/d/19cgiKVQM1ShW9R8JzdWuPVAcXqbPnDbavyeLQyixQxo/edit?gid=0#gid=0 """)
-
+    st.write("""Engage with selected groups from all connections by clicking the Posts' URL. You can create a new group by choosing a client, naming a group and selecting names from the client network.  """)
+    #If you want to manually update the Excel file with groups (remove/add new names from existing groups), you can click on this link: https://docs.google.com/spreadsheets/d/19cgiKVQM1ShW9R8JzdWuPVAcXqbPnDbavyeLQyixQxo/edit?gid=0#gid=0
     # Obtain data for connections
     df_connections = get_all_connections()
 
