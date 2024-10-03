@@ -4,6 +4,7 @@ from google.oauth2 import service_account
 import pygsheets
 import pyodbc
 import json
+from openpyxl import load_workbook
 
 
 ##### CLOUD AUTHENTICATION ####################################################
@@ -23,6 +24,8 @@ conn_str = st.secrets["conn_str"]
 
 
 ###############################################################################
+file_path = 'Engagers_groups.xlsx'
+
 
 def get_all_connections():
     conn = pyodbc.connect(conn_str)
@@ -31,7 +34,7 @@ def get_all_connections():
     conn.close()
     return df
 
-def get_engagers_profiles():
+def get_engagers_group():
     gc = pygsheets.authorize(custom_credentials=creds)
     spreadsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/19cgiKVQM1ShW9R8JzdWuPVAcXqbPnDbavyeLQyixQxo/edit?gid=0#gid=0")
     worksheet = spreadsheet.worksheet_by_title("Engagers")
@@ -52,7 +55,7 @@ def display_group(file_path):
     
     # Read Excel file directly from the specified path
     try:
-        df = get_engagers_profiles()
+        df = pd.read_excel(file_path)
     except FileNotFoundError:
         st.error("The specified file was not found in the provided path.")
         return
@@ -120,7 +123,7 @@ def save_to_excel(file_path, sheet_name, filtered_connections):
 
 
 def main():
-    df_engagers = get_engagers_profiles()
+    #df = get_invited_profiles()
     #st.table(df)
     # Set the title and description of the Streamlit app
     st.title("Create and Monitor Activity of Specific Groups")
