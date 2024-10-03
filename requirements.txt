@@ -4,3 +4,5 @@ getfilelistpy
 pygsheets
 slack_sdk
 pyodbc
+openpyxl
+
