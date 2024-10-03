@@ -68,7 +68,7 @@ def display_group(file_path, client_name):
         category = st.selectbox('Select a Category', unique_categories)
         
         # Filter the DataFrame based on the selected category
-        filtered_df = df[df['Category'] == category & df["Client"]== client_name]
+        filtered_df = df[(df['Category'] == category) & (df['Client'] == client_name)]
         # Option to display as dataframe using a toggle
         display_as_dataframe = st.checkbox("Display as dataframe", value=False)
         
