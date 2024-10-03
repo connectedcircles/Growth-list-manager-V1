@@ -64,7 +64,7 @@ def display_group(file_path, client_name):
         return
 
     if 'Category' in df.columns:
-        unique_categories = df['Category'].unique()
+        unique_categories = df[df["Client"]== client_name]['Category'].unique()
         category = st.selectbox('Select a Category', unique_categories)
         
         # Filter the DataFrame based on the selected category
