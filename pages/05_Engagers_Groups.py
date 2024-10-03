@@ -50,7 +50,7 @@ def make_clickable_link(val):
     return f'<a target="_blank" href="{val}">URL</a>'
 
 
-def display_group(file_path):
+def display_group(file_path, client_name):
     st.subheader("Select a Group")
     
     # Read Excel file directly from the specified path
@@ -68,7 +68,7 @@ def display_group(file_path):
         category = st.selectbox('Select a Category', unique_categories)
         
         # Filter the DataFrame based on the selected category
-        filtered_df = df[df['Category'] == category]
+        filtered_df = df[df['Category'] == category & df["Client"]== client_name]
         # Option to display as dataframe using a toggle
         display_as_dataframe = st.checkbox("Display as dataframe", value=False)
         
@@ -184,7 +184,7 @@ def main():
     if st.button("Save to Excel"):
         save_to_excel(file_path,sheet_name,filtered_connections)
         
-    display_group(file_path)
+    display_group(file_path, Client_Name)
         
 
         
