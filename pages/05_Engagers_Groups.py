@@ -55,7 +55,7 @@ def display_group(file_path, client_name):
     
     # Read Excel file directly from the specified path
     try:
-        df = pd.read_excel(file_path)
+        df = get_engagers_group()
     except FileNotFoundError:
         st.error("The specified file was not found in the provided path.")
         return
@@ -93,38 +93,45 @@ def display_group(file_path, client_name):
         
 
 
-def save_to_excel(file_path, sheet_name, filtered_connections):
+def save_to_google_sheet(sheet_name, filtered_connections, credentials_file, sheet_url):
     try:
-        # Load the existing workbook to check for the sheet
-        workbook = load_workbook(file_path)
+        # Authorize with pygsheets using the credentials file
+        gc = pygsheets.authorize(service_file=credentials_file)
 
-        # Check if the specified sheet already exists
-        if sheet_name in workbook.sheetnames:
-            # Read the existing sheet into a DataFrame, skipping the headers (to preserve them)
-            existing_df = pd.read_excel(file_path, sheet_name=sheet_name, header=0)
+        # Open the Google Sheet by URL
+        spreadsheet = gc.open_by_url(sheet_url)
+
+        try:
+            # Check if the specified sheet already exists
+            worksheet = spreadsheet.worksheet_by_title(sheet_name)
+
+            # Get existing records and convert to DataFrame
+            existing_data = pd.DataFrame(worksheet.get_all_records())
+
+            # Combine the new data with the existing data
+            combined_data = pd.concat([filtered_connections, existing_data], ignore_index=True)
             
-            # Append new data on top by combining filtered_connections above existing data
-            combined_df = pd.concat([filtered_connections, existing_df], ignore_index=True)
-        else:
-            # If the sheet doesn't exist, start with the new data as the combined DataFrame
-            combined_df = filtered_connections
+            # Clear the existing worksheet to prepare for new data
+            worksheet.clear()
+        except pygsheets.WorksheetNotFound:
+            # If the sheet doesn't exist, create a new one and start with the new data
+            worksheet = spreadsheet.add_worksheet(title=sheet_name, rows=1000, cols=50)
+            combined_data = filtered_connections
 
-        # Write the combined DataFrame back to the Excel file, preserving the original headers
-        with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-            # Set `startrow=1` to write data below the existing header row
-            combined_df.to_excel(writer, sheet_name=sheet_name, index=False, startrow=0)
+        # Set the combined data to the worksheet
+        worksheet.set_dataframe(combined_data, (1, 1))  # (1, 1) means starting from the first cell
 
         # Success message after saving
-        st.success("Data saved successfully to Excel file!")
+        print("Data saved successfully to Google Sheet!")
 
     except Exception as e:
         # Display an error message if something goes wrong
-        st.error(f"Error saving data to Excel: {e}")
+        print(f"Error saving data to Google Sheet: {e}")
 
 
 def main():
-    #df = get_invited_profiles()
-    #st.table(df)
+    df = get_invited_profiles()
+    st.table(df)
     # Set the title and description of the Streamlit app
     st.title("Create and Monitor Activity of Specific Groups")
     st.write("""Engage with selected groups from all connections by clicking the Posts' URL. You can create a new group by choosing a client, naming a group and selecting names from the client network.  """)
@@ -182,7 +189,10 @@ def main():
 
     # Add a button to save the DataFrame to the existing Excel file
     if st.button("Save to Excel"):
-        save_to_excel(file_path,sheet_name,filtered_connections)
+        save_to_google_sheet(sheet_name='Engagers',
+    filtered_connections=filtered_df,
+    credentials_file=creds,
+    sheet_url='https://docs.google.com/spreadsheets/d/19cgiKVQM1ShW9R8JzdWuPVAcXqbPnDbavyeLQyixQxo/edit#gid=0')
         
     display_group(file_path, Client_Name)
         
