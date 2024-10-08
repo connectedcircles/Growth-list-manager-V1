@@ -190,7 +190,7 @@ def main():
     # Add a button to save the DataFrame to the existing Excel file
     if st.button("Save to Excel"):
         save_to_google_sheet(sheet_name='Engagers',
-    filtered_connections=filtered_df,
+    filtered_connections=filtered_connections,
     credentials_file=creds,
     sheet_url='https://docs.google.com/spreadsheets/d/19cgiKVQM1ShW9R8JzdWuPVAcXqbPnDbavyeLQyixQxo/edit#gid=0')
         
