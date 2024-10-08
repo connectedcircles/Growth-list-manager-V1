@@ -130,8 +130,8 @@ def save_to_google_sheet(sheet_name, filtered_connections, credentials_file, she
 
 
 def main():
-    df = get_invited_profiles()
-    st.table(df)
+    #df = get_invited_profiles()
+    #st.table(df)
     # Set the title and description of the Streamlit app
     st.title("Create and Monitor Activity of Specific Groups")
     st.write("""Engage with selected groups from all connections by clicking the Posts' URL. You can create a new group by choosing a client, naming a group and selecting names from the client network.  """)
