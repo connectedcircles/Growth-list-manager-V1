@@ -111,6 +111,7 @@ def main():
 
     total_lengths = []
     depleted_lengths = []
+    rejected_lengths = []
     
     for url in files['webViewLink']:
         # Check if the 'url' is not NaN
@@ -148,6 +149,9 @@ def main():
     
                 # Count rows where the "Sent" column has the value "Depleted"
                 depleted_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Depleted")
+                
+                # Count rows where the "Sent" column has the value "Rejected"
+                rejected_count = sum(1 for row in all_values if sent_column_index is not None and row[sent_column_index] == "Rejected")
     
                 total_lengths.append(total_count)
                 depleted_lengths.append(depleted_count)
@@ -162,13 +166,15 @@ def main():
             # Handle NaN case here
             total_lengths.append(0)
             depleted_lengths.append(0)
+            rejected_lengths.append(0)
             
 ### Now we make operations on the dataframe
 # Add the lengths and depleted lengths column in the original DataFrame
     files['length'] = total_lengths
     files['depleted'] = depleted_lengths
+    files['rejected'] = rejected_lengths
     # calculate the number of available rows
-    files['available'] = files['length'] - files['depleted']
+    files['available'] = files['length'] - (files['depleted'] + files['rejected'])
     # label growth lists based on whether they include the strings approved or done
     files['approved'] = files['name'].apply(lambda x: 
                                             'yes' if 'approved' in str(x).lower() 
