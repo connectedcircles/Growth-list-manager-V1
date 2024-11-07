@@ -155,12 +155,14 @@ def main():
     
                 total_lengths.append(total_count)
                 depleted_lengths.append(depleted_count)
+                rejected_lengths.append(rejected_count)
                 
             except Exception as e:
                 print(f"Failed processing {url} due to: {e}")
                 # Append 0 for this URL since it failed
                 total_lengths.append(0)
                 depleted_lengths.append(0)
+                rejected_lengths.append(0)
     
         else:
             # Handle NaN case here
