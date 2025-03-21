@@ -80,7 +80,13 @@ def main():
     Client_Name = st.selectbox("Select Client", unique_clients)
 
     # Dropdown menu for Category with "All Categories" at the top
-    unique_categories = ["All Categories"] + list(df_invited[df_invited['Client Name'] == Client_Name]['Category'].unique())
+    print(df_invited.columns) # debug purposes
+    if 'Client Name' in df_invited.columns:
+        unique_categories = ["All Categories"] + list(df_invited[df_invited['Client Name'] == Client_Name]['Category'].unique())
+    else:
+        st.error("Client Name column is missing in the data source.")
+
+    # unique_categories = ["All Categories"] + list(df_invited[df_invited['Client Name'] == Client_Name]['Category'].unique())
     selected_categories = st.multiselect("Select Category", unique_categories, default=["All Categories"])
 
     df_invited_client_specific = df_invited[df_invited['Client Name'] == Client_Name]
