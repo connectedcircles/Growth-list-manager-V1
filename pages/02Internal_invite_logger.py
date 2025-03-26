@@ -88,18 +88,10 @@ def app():
 
     # Get invited profiles
     invited_profiles = get_invited_profiles()
-    invited_profiles['Client Name'] = invited_profiles[' ']
 
     # Client name selection with custom option
     client_names = list(invited_profiles['Client Name'].unique())
     client_names.append("Enter Custom Name")  # Add custom option
-
-    # Add after setting Client Name to check values
-    print("Sample Client Names from the first column:")
-    print(invited_profiles[' '].head(5).tolist())  # Show first 5 values
-    print("Sample Client Names after setting:")
-    print(invited_profiles['Client Name'].head(5).tolist())  # Should match the above
-
     selected_client_name = st.selectbox("Select client name", client_names)
 
     # Allow custom client name input
