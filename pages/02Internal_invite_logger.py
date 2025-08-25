@@ -222,31 +222,29 @@ def test_slack_connection():
         return False
 
 def app():
-    st.title("🧪 Growth Invite Logger V2 - LOCAL TESTING (Mac)")
+    st.title("Growth Invite Logger V2")
     st.subheader("Property of Connected Circles")
     
     # Simple usage explanation
     with st.expander("📖 How to Use This Page"):
-        st.write("**Used for**: Recording LinkedIn invites you sent")
+        st.write("**Used for**: Logging LinkedIn invites you sent")
         st.write("**Steps**:")
-        st.write("1. Send LinkedIn invites to people")
+        st.write("1. Send LinkedIn invites to people via Circulus")
         st.write("2. Export/save the list of people you invited as CSV")
         st.write("3. Upload the CSV file")
         st.write("4. Select your client name and campaign category")
         st.write("5. Click 'Log Invites to Database'")
         st.write("6. Your team gets notified on Slack")
     
-    st.write("⚡ Testing database integration locally with pymssql driver!")
     
     # Show current configuration
     with st.expander("🔧 Current Configuration"):
         st.text(f"Database: {database} on {server}")
         st.text(f"Username: {username}")
         st.text(f"Slack Channel: {target_channel_id}")
-        st.text(f"Driver: pymssql (Mac compatible)")
     
     # Test connections
-    st.subheader("🔍 Connection Tests")
+    st.subheader("Connection Tests")
     col1, col2 = st.columns(2)
     
     with col1:
