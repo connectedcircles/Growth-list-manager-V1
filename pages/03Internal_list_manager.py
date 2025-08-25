@@ -33,8 +33,9 @@ try:
     password = pwd_match.group(1) if pwd_match else None
     
     # Google credentials
-    # The value of 'google_creds' in secrets.toml should be the full JSON content as a multi-line string.
-    json_creds = st.secrets["google_creds"]
+    # The value of 'raw_creds' in secrets.toml should be the full JSON content as a multi-line string.
+    raw_creds_str = st.secrets["raw_creds"]
+    json_creds = json.loads(raw_creds_str)
     
     st.info("🔒 Using Streamlit secrets for configuration.")
 
