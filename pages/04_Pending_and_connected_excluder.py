@@ -111,8 +111,8 @@ def test_database_connection():
         return False
 
 def app():
-    st.title("🔍 Connection and Pending Invite Filter V2 - LOCAL TEST")
-    st.subheader("Property of Connected Circles - Database Edition (Mac)")
+    st.title("🔍 Connection and Pending Invite Filter V2")
+    st.subheader("Property of Connected Circles")
     
     # Simple usage explanation
     with st.expander("📖 How to Use This Page"):
@@ -124,12 +124,10 @@ def app():
         st.write("4. Download the clean list")
         st.write("5. Use clean list for your campaign")
     
-    st.write("⚡ Lightning-fast filtering powered by Azure SQL Database!")
     
     # Show configuration
     with st.expander("🔧 Current Configuration"):
         st.text(f"Database: {database} on {server}")
-        st.text(f"Driver: pymssql (Mac compatible)")
         st.text(f"Tables: ProfilesX (connections) + InvitedProfiles (invites)")
     
     # Test database connection
@@ -151,11 +149,11 @@ def app():
     st.subheader("📊 Database Summary")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("👥 Total Connections", len(df_connections))
+        st.metric("Total Connections", len(df_connections))
     with col2:
-        st.metric("📧 Total Invited", len(df_invited))
+        st.metric("Total Invited", len(df_invited))
     with col3:
-        st.metric("🏢 Unique Clients", df_connections['Client'].nunique())
+        st.metric("Unique Clients", df_connections['Client'].nunique())
     
     # Client selection
     unique_clients = sorted(df_connections['Client'].unique())
@@ -167,9 +165,9 @@ def app():
     
     col1, col2 = st.columns(2)
     with col1:
-        st.info(f"📊 {client_name} - Connections: {len(client_connections):,}")
+        st.info(f"{client_name} - Connections: {len(client_connections):,}")
     with col2:
-        st.info(f"📧 {client_name} - Invited: {len(client_invited):,}")
+        st.info(f"{client_name} - Invited: {len(client_invited):,}")
     
     # File uploader
     st.subheader("📂 Upload Growth List to Filter")
@@ -239,7 +237,7 @@ def app():
             
             # Show sample of filtered data
             if not growth_list_filtered.empty:
-                st.subheader("📋 Filtered Results Preview")
+                st.subheader("Filtered Results Preview")
                 st.dataframe(growth_list_filtered.head(10), use_container_width=True)
                 
                 # Show removed samples for verification
