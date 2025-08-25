@@ -1,9 +1,29 @@
-gspread
-google.auth
-getfilelistpy
-pygsheets
-slack_sdk
-pyodbc
-openpyxl
-streamlit
+# =============================================================================
+# Requirements for Growth List Manager V1 & V2
+# =============================================================================
 
+# Core Streamlit Framework
+streamlit>=1.28.0
+
+# Data Processing & Analysis
+pandas>=1.5.0
+numpy>=1.24.0
+openpyxl>=3.0.0
+
+# Database Connection (V2)
+pymssql>=2.2.0
+
+# Google Services (Both V1 & V2)
+google-auth>=2.17.0
+google-auth-oauthlib>=1.0.0
+google-auth-httplib2>=0.1.0
+gspread>=5.7.0
+pygsheets>=2.0.6
+getfilelistpy>=1.0.4
+
+# Slack Integration (V2)
+slack-sdk>=3.19.0
+
+# Additional Dependencies
+requests>=2.28.0
+urllib3>=1.26.0
