@@ -110,7 +110,7 @@ def insert_to_database(df, ClientName, Category, DateInvited_str, growth_list_ur
         
         # Send Slack notification
         if inserted_count > 0 and slack_client:
-            message = f"LOCAL TEST: {ClientName}, {inserted_count} profiles, \"{Category}\", {DateInvited_str}, {growth_list_url}"
+            message = f"{ClientName}, {inserted_count} profiles, \"{Category}\", {DateInvited_str}, {growth_list_url}"
             send_slack_message(message)
         elif inserted_count > 0:
             st.info("📢 Slack disabled for local testing")
@@ -241,7 +241,8 @@ def app():
     with st.expander("🔧 Current Configuration"):
         st.text(f"Database: {database} on {server}")
         st.text(f"Username: {username}")
-        st.text(f"Slack Channel: {target_channel_id}")
+        st.text(f"Slack Channel ID: {target_channel_id}")
+        st.text(f"Slack Channel Name: {channel_name}")
     
     # Test connections
     st.subheader("Connection Tests")
@@ -368,7 +369,7 @@ def app():
                 st.metric("👥 Unique Names", non_empty_names)
             
             # Show preview
-            st.subheader("👀 Data Preview")
+            st.subheader("Data Preview")
             st.dataframe(df, use_container_width=True)
             
             # Show column info
