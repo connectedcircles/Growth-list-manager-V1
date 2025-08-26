@@ -242,7 +242,6 @@ def app():
         st.text(f"Database: {database} on {server}")
         st.text(f"Username: {username}")
         st.text(f"Slack Channel ID: {target_channel_id}")
-        st.text(f"Slack Channel Name: {channel_name}")
     
     # Test connections
     st.subheader("Connection Tests")
