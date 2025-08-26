@@ -212,7 +212,7 @@ def test_slack_connection():
         response = slack_client.conversations_info(channel=target_channel_id)
         if response["ok"]:
             channel_name = response["channel"]["name"]
-            st.success(f"✅ Slack connected! Target channel: #{channel_name}")
+            st.success(f"✅ Slack connected! Target channel: #growth-invites-log")
             return True
         else:
             st.error(f"❌ Slack channel error: {response['error']}")
