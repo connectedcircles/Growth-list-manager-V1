@@ -369,7 +369,7 @@ def app():
             
             # Show preview
             st.subheader("👀 Data Preview")
-            st.dataframe(df.head(), use_container_width=True)
+            st.dataframe(df, use_container_width=True)
             
             # Show column info
             with st.expander("📊 Column Information"):
