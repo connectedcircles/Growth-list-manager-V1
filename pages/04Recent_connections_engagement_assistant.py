@@ -279,13 +279,13 @@ def main():
         st.session_state['org_filter'] = selected_search_data['OrganizationFilter'] if pd.notna(selected_search_data['OrganizationFilter']) else ""
         st.session_state['min_followers'] = int(selected_search_data['MinFollowers']) if pd.notna(selected_search_data['MinFollowers']) else 0
         st.session_state['max_followers'] = int(selected_search_data['MaxFollowers']) if pd.notna(selected_search_data['MaxFollowers']) else 0
-        st.session_state['connected_start'] = selected_search_data['ConnectedStartDate'] if pd.notna(selected_search_data['ConnectedStartDate']) else pd.to_datetime("1970-01-01").date()
-        st.session_state['connected_end'] = selected_search_data['ConnectedEndDate'] if pd.notna(selected_search_data['ConnectedEndDate']) else pd.to_datetime("today").date()
-        st.session_state['invited_start'] = selected_search_data['InvitedStartDate'] if pd.notna(selected_search_data['InvitedStartDate']) else pd.to_datetime("1970-01-01").date()
-        st.session_state['invited_end'] = selected_search_data['InvitedEndDate'] if pd.notna(selected_search_data['InvitedEndDate']) else pd.to_datetime("today").date()
+        st.session_state['connected_start'] = selected_search_data['ConnectedStartDate'] if pd.notna(selected_search_data['ConnectedStartDate']) else datetime.date(2020, 1, 1)
+        st.session_state['connected_end'] = selected_search_data['ConnectedEndDate'] if pd.notna(selected_search_data['ConnectedEndDate']) else datetime.date.today()
+        st.session_state['invited_start'] = selected_search_data['InvitedStartDate'] if pd.notna(selected_search_data['InvitedStartDate']) else datetime.date(2020, 1, 1)
+        st.session_state['invited_end'] = selected_search_data['InvitedEndDate'] if pd.notna(selected_search_data['InvitedEndDate']) else datetime.date.today()
         st.session_state['client_name_from_search'] = selected_search_data['ClientName'] # Store client name from search
 
-        st.experimental_rerun() # Rerun to apply filters
+        st.rerun() # Rerun to apply filters
 
     # Delete search
     if selected_saved_search_name != "-- Select a saved search --":
@@ -294,7 +294,7 @@ def main():
             db_conn = get_db_connection()
             delete_search(db_conn, search_id_to_delete)
             db_conn.close()
-            st.experimental_rerun() # Rerun to update list
+            st.rerun() # Rerun to update list
 
     # --- Filter UI ---
     st.subheader("Filter Connections")
@@ -313,26 +313,84 @@ def main():
     if 'max_followers' not in st.session_state:
         st.session_state['max_followers'] = 0
     if 'connected_start' not in st.session_state:
-        st.session_state['connected_start'] = datetime.date(1, 1, 1) # Earliest possible date
+        st.session_state['connected_start'] = datetime.date(2020, 1, 1) # Reasonable start date
     if 'connected_end' not in st.session_state:
         st.session_state['connected_end'] = datetime.date.today()
     if 'invited_start' not in st.session_state:
-        st.session_state['invited_start'] = datetime.date(1, 1, 1) # Earliest possible date
+        st.session_state['invited_start'] = datetime.date(2020, 1, 1) # Reasonable start date
     if 'invited_end' not in st.session_state:
         st.session_state['invited_end'] = datetime.date.today()
     if 'client_name_from_search' not in st.session_state:
         st.session_state['client_name_from_search'] = client_name # Default to current client
 
-    # Client selection (now potentially driven by saved search)
-    # If a saved search was loaded, use its client name, otherwise use the default client_name
-    current_client_selection = st.selectbox(
-        "🏢 Select Client",
+    # Update client selection based on saved search if applicable
+    if 'client_name_from_search' in st.session_state and st.session_state['client_name_from_search'] in unique_clients:
+        client_name = st.session_state['client_name_from_search']
+        client_name_index = unique_clients.index(client_name)
+    else:
+        client_name_index = 0
+        
+    # Update the client selection to reflect any changes from saved search
+    client_name = st.selectbox(
+        "🏢 Current Client Filter",
         unique_clients,
-        index=unique_clients.index(st.session_state['client_name_from_search']) if st.session_state['client_name_from_search'] in unique_clients else 0,
-        key='client_selector' # Add a key to prevent duplicate widget error
+        index=client_name_index,
+        key='main_client_selector'
     )
-    # Update client_name for the rest of the script
-    client_name = current_client_selection
+    
+    # Update client-specific data based on current selection
+    client_connections = df_connections[df_connections['Client'] == client_name]
+    client_invited = df_invited_clean[df_invited_clean['ClientName'] == client_name]
+    
+    # Update categories for current client
+    if not client_invited.empty:
+        unique_categories = ["🌟 All Categories"] + sorted(
+            client_invited['Category'].dropna().unique()
+        )
+    else:
+        unique_categories = ["🌟 All Categories"]
+    
+    # Merge to find accepted connections (people invited who are now connected)
+    df_accepted = pd.merge(
+        client_invited, 
+        client_connections[['Name', 'ProfileDate']], 
+        on='Name', 
+        how='inner'
+    )
+    
+    if df_accepted.empty:
+        st.info("No accepted connections found for this client.")
+        st.info("This means none of the people you invited have accepted yet, or there's a data mismatch.")
+        
+        # Show debugging info
+        with st.expander("🔍 Debugging Information"):
+            st.write("**Sample Invited Names:**")
+            if not client_invited.empty:
+                st.dataframe(client_invited[['Name']].head(), use_container_width=True)
+            else:
+                st.write("No invited profiles for this client")
+            st.write("**Sample Connection Names:**")
+            if not client_connections.empty:
+                st.dataframe(client_connections[['Name']].head(), use_container_width=True)
+            else:
+                st.write("No connections for this client")
+        
+        return
+    
+    # Prepare display data (column mapping)
+    df_display = df_accepted[[
+        "Name", "Title", "Organization1", "ProfileURL", "Posts_URL", 
+        "Followers", "Category", "DateCollected", "ProfileDate"
+    ]].copy()
+    
+    # Rename columns for better display
+    df_display.rename(columns={
+        "Organization1": "Organization",
+        "Posts_URL": "Posts URL",
+        "DateCollected": "Invited On",
+        "ProfileDate": "Connected On (Approx)",
+        "ProfileURL": "Profile URL"
+    }, inplace=True)
 
     # Category selection
     selected_categories = st.multiselect(
@@ -399,45 +457,9 @@ def main():
                 invited_end
             )
             db_conn.close()
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.warning("Please enter a name for the search.")
-
-    # Merge to find accepted connections (people invited who are now connected)
-    df_accepted = pd.merge(
-        client_invited, 
-        client_connections[['Name', 'ProfileDate']], 
-        on='Name', 
-        how='inner'
-    )
-    
-    if df_accepted.empty:
-        st.info("No accepted connections found for this client.")
-        st.info("This means none of the people you invited have accepted yet, or there's a data mismatch.")
-        
-        # Show debugging info
-        with st.expander("🔍 Debugging Information"):
-            st.write("**Sample Invited Names:**")
-            st.dataframe(client_invited[['Name']].head(), use_container_width=True)
-            st.write("**Sample Connection Names:**")
-            st.dataframe(client_connections[['Name']].head(), use_container_width=True)
-        
-        return
-    
-    # Prepare display data (column mapping)
-    df_display = df_accepted[[
-        "Name", "Title", "Organization1", "ProfileURL", "Posts_URL", 
-        "Followers", "Category", "DateCollected", "ProfileDate"
-    ]].copy()
-    
-    # Rename columns for better display
-    df_display.rename(columns={
-        "Organization1": "Organization",
-        "Posts_URL": "Posts URL",
-        "DateCollected": "Invited On",
-        "ProfileDate": "Connected On (Approx)",
-        "ProfileURL": "Profile URL"
-    }, inplace=True)
 
     # --- Apply Filters ---
 
