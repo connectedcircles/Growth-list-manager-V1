@@ -425,15 +425,16 @@ def main():
 
         # Date range filters
         st.markdown("---")
-        st.markdown("**Connected Between:**")
-        col_conn_date1, col_conn_date2 = st.columns(2)
-        connected_start = col_conn_date1.date_input("Connected Start Date", value=st.session_state['connected_start'], key='conn_start')
-        connected_end = col_conn_date2.date_input("Connected End Date", value=st.session_state['connected_end'], key='conn_end')
-
-        st.markdown("---")
-        col_inv_date1, col_inv_date2 = st.columns(2)
-        invited_start = col_inv_date1.date_input("Invited Start Date", value=st.session_state['invited_start'], key='inv_start')
-        invited_end = col_inv_date2.date_input("Invited End Date", value=st.session_state['invited_end'], key='inv_end')
+        st.markdown("**Date Filters:**")
+        col_date1, col_date2 = st.columns(2)
+        with col_date1:
+            st.markdown("**Invited On:**")
+            invited_start = st.date_input("From", value=st.session_state['invited_start'], key='invited_from')
+            invited_end = st.date_input("To", value=st.session_state['invited_end'], key='invited_to')
+        with col_date2:
+            st.markdown("**Connected On (Approx):**")
+            connected_start = st.date_input("From", value=st.session_state['connected_start'], key='connected_from')
+            connected_end = st.date_input("To", value=st.session_state['connected_end'], key='connected_to')
 
     # Save Search
     st.markdown("---")
@@ -558,13 +559,18 @@ def main():
                 padding: 8px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
+                color: #333;
             }
             th {
                 background-color: #f2f2f2;
                 font-weight: bold;
             }
             tr:hover {
-                background-color: #f5f5f5;
+                background-color: #e3f2fd !important;
+                color: #1565c0 !important;
+            }
+            tr:hover td {
+                color: #1565c0 !important;
             }
             .recent {
                 background-color: #e8f5e8;
