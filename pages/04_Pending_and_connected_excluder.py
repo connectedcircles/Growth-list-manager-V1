@@ -225,8 +225,13 @@ def app():
         st.metric("Unique Clients", df_connections['Client'].nunique())
     
     # Client selection
-    unique_clients = sorted(df_connections['Client'].unique())
-    client_name = st.selectbox('🏢 Select Client', unique_clients)
+    unique_clients_connections = df_connections['Client'].unique()
+    unique_clients_invited = df_invited['ClientName'].unique()
+    
+    # Combine and sort unique client names
+    all_clients = sorted(list(set(list(unique_clients_connections) + list(unique_clients_invited))))
+    
+    client_name = st.selectbox('🏢 Select Client', all_clients)
     
     # Show client-specific stats
     client_connections = df_connections[df_connections['Client'] == client_name]
